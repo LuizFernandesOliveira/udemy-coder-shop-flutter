@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../components/badge.dart';
 import '../components/product_grid.dart';
 
 enum FilterOptions {
@@ -23,13 +24,13 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
         title: const Text('Minha Loja'),
         actions: [
           PopupMenuButton(
-            icon: Icon(Icons.more_vert),
+            icon: const Icon(Icons.more_vert),
             itemBuilder: (_) => [
-              PopupMenuItem(
+              const PopupMenuItem(
                 child: Text('Somente Favoritos'),
                 value: FilterOptions.Favorite,
               ),
-              PopupMenuItem(
+              const PopupMenuItem(
                 child: Text('Todos'),
                 value: FilterOptions.All,
               ),
@@ -43,6 +44,13 @@ class _ProductsOverviewPageState extends State<ProductsOverviewPage> {
                 }
               });
             },
+          ),
+          Badge(
+            value: "2",
+            child: IconButton(
+              onPressed: () {},
+              icon: const Icon(Icons.shopping_cart),
+            ),
           )
         ],
       ),
