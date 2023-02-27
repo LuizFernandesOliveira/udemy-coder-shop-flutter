@@ -23,7 +23,7 @@ class ProductItem extends StatelessWidget {
             IconButton(
               onPressed: () {},
               icon: const Icon(Icons.edit),
-              color: Theme.of(context).colorScheme.secondary,
+              color: Theme.of(context).colorScheme.primary,
             ),
             IconButton(
               onPressed: () {},

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shopping/components/app_drawer.dart';
 import 'package:shopping/components/product_item.dart';
 import 'package:shopping/provider/product_list.dart';
+import 'package:shopping/utils/app_routes.dart';
 
 class ProductPage extends StatelessWidget {
   const ProductPage({Key? key}) : super(key: key);
@@ -13,6 +14,14 @@ class ProductPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Gerenciar produtos'),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context).pushNamed(AppRoutes.PRODUCTS_FORM);
+            },
+            icon: const Icon(Icons.add),
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(8),
