@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shopping/models/product.dart';
 import 'package:shopping/provider/product_list.dart';
 
 class ProductFormPage extends StatefulWidget {
@@ -30,6 +31,24 @@ class _ProductFormPageState extends State<ProductFormPage> {
   void initState() {
     super.initState();
     _imageUrlFocus.addListener(_updateImageUrl);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (_formData.isEmpty) {
+      final arg = ModalRoute.of(context)?.settings.arguments;
+
+      if (arg != null) {
+        final product = arg as Product;
+        _formData['id'] = product.id;
+        _formData['name'] = product.id;
+        _formData['price'] = product.id;
+        _formData['description'] = product.id;
+        _formData['imageUrl'] = product.id;
+        _imageUrlController.text = product.imageUrl;
+      }
+    }
   }
 
   void _updateImageUrl() {
@@ -75,6 +94,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
             padding: const EdgeInsets.all(15),
             children: [
               TextFormField(
+                initialValue: _formData['name']?.toString(),
                 decoration: const InputDecoration(labelText: 'Nome'),
                 textInputAction: TextInputAction.next,
                 onFieldSubmitted: (_) {
@@ -96,6 +116,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 },
               ),
               TextFormField(
+                initialValue: _formData['price']?.toString(),
                 decoration: const InputDecoration(labelText: 'Preço'),
                 textInputAction: TextInputAction.next,
                 focusNode: _priceFocus,
@@ -120,6 +141,7 @@ class _ProductFormPageState extends State<ProductFormPage> {
                 },
               ),
               TextFormField(
+                initialValue: _formData['description']?.toString(),
                 decoration: const InputDecoration(labelText: 'Descrição'),
                 focusNode: _descriptionFocus,
                 keyboardType: TextInputType.multiline,
