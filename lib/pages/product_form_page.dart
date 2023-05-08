@@ -18,6 +18,8 @@ class _ProductFormPageState extends State<ProductFormPage> {
   final _formKey = GlobalKey<FormState>();
   final _formData = Map<String, Object>();
 
+  bool _isLoading = false;
+
   @override
   void dispose() {
     super.dispose();
@@ -64,8 +66,18 @@ class _ProductFormPageState extends State<ProductFormPage> {
 
     _formKey.currentState?.save();
 
-    Provider.of<ProductList>(context, listen: false).saveProduct(_formData);
-    Navigator.of(context).pop();
+    setState(() {
+      _isLoading = true;
+    });
+
+    Provider.of<ProductList>(context, listen: false)
+        .saveProduct(_formData)
+        .then((value) {
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop();
+    });
   }
 
   bool isValidImageUrl(String url) {
@@ -88,7 +100,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
             )
           ],
         ),
-        body: Form(
+        body: _isLoading ? Center(
+          child: CircularProgressIndicator(),
+        ) : Form(
           key: _formKey,
           child: ListView(
             padding: const EdgeInsets.all(15),
@@ -200,11 +214,9 @@ class _ProductFormPageState extends State<ProductFormPage> {
                     alignment: Alignment.center,
                     child: _imageUrlController.text.isEmpty
                         ? Text('Informe a URL')
-                        : FittedBox(
-                            child: Image.network(
-                              _imageUrlController.text,
-                              fit: BoxFit.cover,
-                            ),
+                        : Image.network(
+                            _imageUrlController.text,
+                            fit: BoxFit.cover,
                           ),
                   ),
                 ],
