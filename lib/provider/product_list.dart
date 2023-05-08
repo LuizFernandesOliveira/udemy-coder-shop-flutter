@@ -77,7 +77,7 @@ class ProductList with ChangeNotifier {
         isFavorite: product.isFavorite,
       ));
       notifyListeners();
-    });
+    })
   }
 }
 
