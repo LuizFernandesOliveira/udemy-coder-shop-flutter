@@ -3,11 +3,13 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shopping/exceptions/http_exception.dart';
 
 import '../models/product.dart';
 
 class ProductList with ChangeNotifier {
-  final _baseUrl = 'https://app-store-a37ab-default-rtdb.firebaseio.com/products';
+  final _baseUrl =
+      'https://app-store-a37ab-default-rtdb.firebaseio.com/products';
   final List<Product> _items = [];
 
   List<Product> get items {
@@ -38,6 +40,7 @@ class ProductList with ChangeNotifier {
 
     notifyListeners();
   }
+
   Future<void> saveProduct(Map<String, Object> data) {
     bool hasId = data['id'] != null;
     final product = Product(
@@ -73,12 +76,24 @@ class ProductList with ChangeNotifier {
     return Future.value();
   }
 
-  void removeProduct(Product product) {
+  Future<void> removeProduct(Product product) async {
     int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
-      _items.removeWhere((p) => p.id == product.id);
+      final product = _items[index];
+      _items.remove(product);
       notifyListeners();
+
+      final response =
+          await http.delete(Uri.parse('$_baseUrl/${product.id}.json'));
+      if (response.statusCode >= 400) {
+        _items.insert(index, product);
+        notifyListeners();
+        throw HttpException(
+          message: 'Não foi posssível excluir o produto',
+          statusCode: response.statusCode,
+        );
+      }
     }
   }
 
