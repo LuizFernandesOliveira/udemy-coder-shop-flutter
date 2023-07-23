@@ -3,13 +3,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shopping/data/dummy_data.dart';
 
 import '../models/product.dart';
 
 class ProductList with ChangeNotifier {
-  final _baseUrl = 'https://app-shopping-7873a-default-rtdb.firebaseio.com';
-  final List<Product> _items = dummyProducts;
+  final _url = 'https://app-store-a37ab-default-rtdb.firebaseio.com/products.json';
+  final List<Product> _items = [];
 
   List<Product> get items {
     return [..._items];
@@ -19,6 +18,26 @@ class ProductList with ChangeNotifier {
     return _items.where((product) => product.isFavorite).toList();
   }
 
+  Future<void> loadProducts() async {
+    _items.clear();
+    final response = await http.get(Uri.parse(_url));
+    if (response.body == 'null') {
+      return;
+    }
+    Map<String, dynamic> data = jsonDecode(response.body);
+    data.forEach((identify, product) {
+      _items.add(Product(
+        id: identify,
+        name: product['name'],
+        description: product['description'],
+        price: product['price'],
+        imageUrl: product['imageUrl'],
+        isFavorite: product['isFavorite'],
+      ));
+    });
+
+    notifyListeners();
+  }
   Future<void> saveProduct(Map<String, Object> data) {
     bool hasId = data['id'] != null;
     final product = Product(
@@ -57,7 +76,7 @@ class ProductList with ChangeNotifier {
   }
 
   Future<void> add(Product product) async {
-    final response = await http.post(Uri.parse('$_baseUrl/products.json'),
+    final response = await http.post(Uri.parse(_url),
         body: jsonEncode({
           "name": product.name,
           "description": product.description,
