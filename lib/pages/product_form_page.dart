@@ -44,10 +44,10 @@ class _ProductFormPageState extends State<ProductFormPage> {
       if (arg != null) {
         final product = arg as Product;
         _formData['id'] = product.id;
-        _formData['name'] = product.id;
-        _formData['price'] = product.id;
-        _formData['description'] = product.id;
-        _formData['imageUrl'] = product.id;
+        _formData['name'] = product.name;
+        _formData['price'] = product.price;
+        _formData['description'] = product.description;
+        _formData['imageUrl'] = product.imageUrl;
         _imageUrlController.text = product.imageUrl;
       }
     }

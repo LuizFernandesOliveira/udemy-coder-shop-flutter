@@ -13,7 +13,7 @@ class ProductItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-        title: const Text('Produto'),
+        title: Text(product.name),
         leading: CircleAvatar(
           backgroundImage: NetworkImage(product.imageUrl),
         ),
