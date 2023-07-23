@@ -6,10 +6,9 @@ import 'package:http/http.dart' as http;
 import 'package:shopping/exceptions/http_exception.dart';
 
 import '../models/product.dart';
+import '../utils/constant.dart';
 
 class ProductList with ChangeNotifier {
-  final _baseUrl =
-      'https://app-store-a37ab-default-rtdb.firebaseio.com/products';
   final List<Product> _items = [];
 
   List<Product> get items {
@@ -22,7 +21,7 @@ class ProductList with ChangeNotifier {
 
   Future<void> loadProducts() async {
     _items.clear();
-    final response = await http.get(Uri.parse('$_baseUrl.json'));
+    final response = await http.get(Uri.parse('${Constant.PRODUCT_BASE_URL}.json'));
     if (response.body == 'null') {
       return;
     }
@@ -62,7 +61,7 @@ class ProductList with ChangeNotifier {
     int index = _items.indexWhere((p) => p.id == product.id);
 
     if (index >= 0) {
-      await http.patch(Uri.parse('$_baseUrl/${product.id}.json'),
+      await http.patch(Uri.parse('${Constant.PRODUCT_BASE_URL}/${product.id}.json'),
           body: jsonEncode({
             "name": product.name,
             "description": product.description,
@@ -85,7 +84,7 @@ class ProductList with ChangeNotifier {
       notifyListeners();
 
       final response =
-          await http.delete(Uri.parse('$_baseUrl/${product.id}.json'));
+          await http.delete(Uri.parse('${Constant.PRODUCT_BASE_URL}/${product.id}.json'));
       if (response.statusCode >= 400) {
         _items.insert(index, product);
         notifyListeners();
@@ -98,7 +97,7 @@ class ProductList with ChangeNotifier {
   }
 
   Future<void> add(Product product) async {
-    final response = await http.post(Uri.parse('$_baseUrl.json'),
+    final response = await http.post(Uri.parse('${Constant.PRODUCT_BASE_URL}.json'),
         body: jsonEncode({
           "name": product.name,
           "description": product.description,
